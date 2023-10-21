@@ -2,6 +2,8 @@
 plugins {
     alias(libs.plugins.com.android.application)
     alias(libs.plugins.org.jetbrains.kotlin.android)
+    kotlin("kapt")
+    alias(libs.plugins.com.google.dagger.hilt.android)
 }
 
 android {
@@ -19,6 +21,10 @@ android {
     }
 
     buildTypes {
+        all {
+            val openWeatherApiKey: String by project
+            buildConfigField("String", "OPEN_WEATHER_API_KEY", openWeatherApiKey)
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -29,6 +35,7 @@ android {
     }
 
     buildFeatures {
+        buildConfig = true
         viewBinding = true
     }
 
@@ -48,6 +55,10 @@ dependencies {
     implementation(libs.material)
     implementation(libs.constraintlayout)
 
+    // DI
+    implementation(libs.hilt)
+    kapt(libs.hilt.compiler)
+
     // Networking
     implementation(libs.gson)
     implementation(libs.okhttp)
@@ -58,4 +69,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
+}
+
+kapt {
+    correctErrorTypes = true
 }
