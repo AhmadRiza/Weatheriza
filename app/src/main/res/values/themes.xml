@@ -1,8 +1,17 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.Weatheriza" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/md_blue_500</item>
+        <item name="colorPrimaryVariant">@color/md_blue_500</item>
+        <item name="colorSecondary">@color/md_blue_200</item>
+        <item name="colorSecondaryVariant">@color/md_blue_400</item>
+        <item name="android:colorBackground">@color/white</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnSecondary">@color/gray</item>
+        <item name="colorOnSurface">@color/gray</item>
+        <item name="colorOnBackground">@color/gray</item>
     </style>
 
     <style name="Theme.Weatheriza" parent="Base.Theme.Weatheriza" />

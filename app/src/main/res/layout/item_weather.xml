@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="42dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/textWeatherType"
+        style="@style/Typography.Body.Bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:textColor="@color/gray_dark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Cloudy" />
+
+    <TextView
+        android:id="@+id/textCityName"
+        style="@style/Typography.Body"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textWeatherType"
+        tools:text="Madiun, ID" />
+
+    <ImageView
+        android:id="@+id/imageIcon"
+        android:layout_width="100dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textCityName"
+        tools:src="@drawable/cloud" />
+
+    <TextView
+        android:id="@+id/textTemperature"
+        style="@style/Typography.Body.SemiBold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:textSize="40sp"
+        android:textColor="@color/gray_dark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageIcon"
+        tools:text="30" />
+
+    <TextView
+        android:id="@+id/textView"
+        style="@style/Typography.Body"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/celcius"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/textTemperature"
+        app:layout_constraintTop_toTopOf="@+id/textTemperature" />
+
+    <TextView
+        android:id="@+id/textFeelsLike"
+        style="@style/Typography.Body"
+        android:textSize="12sp"
+        android:textColor="@color/gray_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textTemperature"
+        tools:text="Feels like 40°C" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imageWindIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:tint="@color/gray"
+        app:layout_constraintBottom_toBottomOf="@+id/textTemperature"
+        app:layout_constraintEnd_toStartOf="@+id/textTemperature"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textTemperature"
+        app:srcCompat="@drawable/ic_wind_speed" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imageHumidityIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:tint="@color/gray"
+        app:layout_constraintBottom_toTopOf="@+id/textFeelsLike"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textTemperature"
+        app:layout_constraintTop_toTopOf="@+id/textTemperature"
+        app:srcCompat="@drawable/ic_humidity" />
+
+    <TextView
+        android:id="@+id/textWindSpeed"
+        style="@style/Typography.Body.Bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/gray"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/imageWindIcon"
+        app:layout_constraintStart_toStartOf="@+id/imageWindIcon"
+        app:layout_constraintTop_toBottomOf="@+id/imageWindIcon"
+        tools:text="20 km/h" />
+
+    <TextView
+        android:id="@+id/textHumidity"
+        style="@style/Typography.Body.Bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/gray"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/imageHumidityIcon"
+        app:layout_constraintStart_toStartOf="@+id/imageHumidityIcon"
+        app:layout_constraintTop_toBottomOf="@+id/imageHumidityIcon"
+        tools:text="30%" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
