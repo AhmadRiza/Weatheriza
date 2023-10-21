@@ -20,9 +20,9 @@ interface OpenWeatherService {
 
     @GET("data/2.5/forecast")
     suspend fun getFiveDaysForeCast(
-        @Query("units") units: String = DEFAULT_UNIT,
         @Query("lat") latitude: Double,
         @Query("lon") longitude: Double,
+        @Query("units") units: String = DEFAULT_UNIT,
     ): Response<List<ForecastEntity>>
 
 }
