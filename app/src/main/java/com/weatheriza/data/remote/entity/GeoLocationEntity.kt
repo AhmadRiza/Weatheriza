@@ -6,7 +6,6 @@ import androidx.annotation.Keep
 data class GeoLocationEntity(
     val name: String?,
     val countryCode: String?,
-    val state: String,
-    val lat: Long?,
-    val lon: Long?
+    val lat: Double?,
+    val lon: Double?
 )

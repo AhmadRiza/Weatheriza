@@ -7,7 +7,8 @@ data class ForecastEntity(
     val dt: Long?,
     val main: MainEntity?,
     val weather: WeatherEntity?,
-    val wind: WindEntity?
+    val wind: WindEntity?,
+    val city: CityEntity?
 ) {
     @Keep
     data class MainEntity(
@@ -31,5 +32,19 @@ data class ForecastEntity(
         val speed: Float?,
         val degree: Float?,
     )
+
+    @Keep
+    data class CityEntity(
+        val name: String?,
+        val country: String?,
+        val sunrise: Long?,
+        val sunset: Long?,
+        val coord: CoordinateEntity?
+    ) {
+        data class CoordinateEntity(
+            val lat: Double?,
+            val lon: Double?
+        )
+    }
 
 }
