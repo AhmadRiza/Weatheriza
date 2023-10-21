@@ -4,12 +4,11 @@ import com.google.gson.Gson
 import com.weatheriza.core.entities.ErrorEntity
 import com.weatheriza.core.entities.ErrorNetworkResult
 import com.weatheriza.core.entities.NetworkResult
+import com.weatheriza.core.model.DefaultErrorMessage
 import com.weatheriza.core.network.exception.NoInternetConnectionException
 import retrofit2.Response
 import java.io.Reader
 
-
-private const val UNKNOWN_ERROR_MESSAGE = "Something wrong!"
 suspend fun <T : Any> safeApiCall(apiCall: suspend () -> NetworkResult<T>): NetworkResult<T> {
     return try {
         apiCall()
@@ -50,7 +49,7 @@ private fun ErrorEntity?.toErrorResult(
     httpStatusCode: Int,
 ): ErrorNetworkResult {
     return ErrorNetworkResult.NetworkError(
-        errorMessage = this?.message ?: UNKNOWN_ERROR_MESSAGE,
+        errorMessage = this?.message ?: DefaultErrorMessage.UNKNOWN,
         httpCode = httpStatusCode
     )
 }

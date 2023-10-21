@@ -1,36 +1,31 @@
 package com.weatheriza.di
 
-import com.google.gson.Gson
-import com.weatheriza.core.network.HostUrl
+import com.weatheriza.data.remote.OpenWeatherRemoteDataSource
+import com.weatheriza.data.remote.OpenWeatherRemoteDataSourceImpl
+import com.weatheriza.data.remote.OpenWeatherService
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import okhttp3.OkHttpClient
+import dagger.hilt.android.components.ViewModelComponent
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Qualifier
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class OpenWeatherRetrofit
 
 
 @Module
-@InstallIn(SingletonComponent::class)
-class DataModule {
+@InstallIn(ViewModelComponent::class)
+abstract class DataModule {
 
-    @OpenWeatherRetrofit
     @Provides
-    fun provideOpenWeatherRetrofit(
-        okHttpClient: OkHttpClient,
-        gson: Gson,
-    ): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(HostUrl.OPEN_WEATHER_BASE_URL)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
+    fun provideOpenWeatherService(
+        @OpenWeatherRetrofit retrofit: Retrofit
+    ): OpenWeatherService {
+        return retrofit.create(OpenWeatherService::class.java)
     }
+
+    @Binds
+    abstract fun bindsOpenWeatherRemoteDataSource(
+        impl: OpenWeatherRemoteDataSourceImpl
+    ): OpenWeatherRemoteDataSource
+
 
 }

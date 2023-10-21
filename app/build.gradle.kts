@@ -56,6 +56,7 @@ dependencies {
     implementation(libs.constraintlayout)
 
     // DI
+    implementation(libs.javax.inject)
     implementation(libs.hilt)
     kapt(libs.hilt.compiler)
 
