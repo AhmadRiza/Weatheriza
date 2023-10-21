@@ -15,13 +15,14 @@ data class Weather(
     val iconUrl: String
 )
 
-enum class WeatherType(val firstDigitId: Int) {
-    THUNDERSTORM(2),
-    DRIZZLE(3),
-    RAIN(5),
-    SNOW(6),
-    ATMOSPHERE(7),
-    CLOUD_N_CLEAR(8)
+enum class WeatherType {
+    THUNDERSTORM,
+    DRIZZLE,
+    RAIN,
+    SNOW,
+    ATMOSPHERE,
+    CLOUD_N_CLEAR,
+    UNKNOWN
 }
 
 data class City(
