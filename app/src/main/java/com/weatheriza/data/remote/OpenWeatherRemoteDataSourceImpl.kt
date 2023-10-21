@@ -5,6 +5,7 @@ import com.weatheriza.core.network.mapper.safeApiCall
 import com.weatheriza.core.network.mapper.toNetworkResult
 import com.weatheriza.data.remote.entity.ForecastEntity
 import com.weatheriza.data.remote.entity.GeoLocationEntity
+import com.weatheriza.data.remote.service.OpenWeatherService
 import javax.inject.Inject
 
 class OpenWeatherRemoteDataSourceImpl @Inject constructor(

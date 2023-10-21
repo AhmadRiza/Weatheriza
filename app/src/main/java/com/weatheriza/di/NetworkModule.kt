@@ -7,6 +7,7 @@ import com.google.gson.GsonBuilder
 import com.weatheriza.core.network.HostUrl
 import com.weatheriza.core.network.interceptor.ApiKeyInterceptor
 import com.weatheriza.core.network.interceptor.InternetConnectionInterceptor
+import com.weatheriza.data.remote.service.OpenWeatherService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -95,4 +96,12 @@ object NetworkModule {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
     }
+
+    @Provides
+    fun provideOpenWeatherService(
+        @OpenWeatherRetrofit retrofit: Retrofit
+    ): OpenWeatherService {
+        return retrofit.create(OpenWeatherService::class.java)
+    }
+
 }

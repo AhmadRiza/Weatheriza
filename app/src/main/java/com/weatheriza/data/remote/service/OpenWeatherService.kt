@@ -1,4 +1,4 @@
-package com.weatheriza.data.remote
+package com.weatheriza.data.remote.service
 
 import com.weatheriza.data.remote.entity.ForecastEntity
 import com.weatheriza.data.remote.entity.GeoLocationEntity

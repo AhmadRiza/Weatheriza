@@ -12,7 +12,8 @@ import com.weatheriza.data.remote.entity.GeoLocationEntity
 fun ForecastEntity.toForecast(): Forecast {
     return Forecast(
         date = dt ?: 0L,
-        temperature = main?.temp ?: .0f,
+        temperature = main?.temp ?: 0.0f,
+        feelsLike = main?.feelsLike ?: 0.0f,
         humidity = main?.humidity ?: 0.0f,
         weather = Weather(
             weatherType = weather.getWeatherType(),
@@ -20,6 +21,7 @@ fun ForecastEntity.toForecast(): Forecast {
             description = weather?.description.orEmpty(),
             iconUrl = HostUrl.OPEN_WEATHER_ICON_URL.format(weather?.icon.orEmpty())
         ),
+        windSpeed = wind?.speed ?: 0.0f,
         city = City(
             name = city?.name.orEmpty(),
             country = city?.country.orEmpty(),

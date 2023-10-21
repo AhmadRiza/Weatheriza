@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.com.android.application)
     alias(libs.plugins.org.jetbrains.kotlin.android)
     kotlin("kapt")
-    alias(libs.plugins.com.google.dagger.hilt.android)
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -40,11 +40,22 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
+    }
+    packaging {
+        resources.excludes.addAll(
+            listOf(
+                "META-INF/AL2.0",
+                "META-INF/LGPL2.1",
+            )
+        )
+    }
+    testOptions {
+        unitTests.all { it.useJUnitPlatform() }
     }
 }
 
@@ -58,6 +69,7 @@ dependencies {
     // DI
     implementation(libs.javax.inject)
     implementation(libs.hilt)
+    implementation(libs.android.annotations)
     kapt(libs.hilt.compiler)
 
     // Networking
@@ -68,6 +80,11 @@ dependencies {
     implementation(libs.retrofit.converter.gson)
 
     testImplementation(libs.junit)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.mockk)
+    testImplementation(libs.turbine)
+    testRuntimeOnly(libs.kotest.junit5.vintage)
+    testImplementation(libs.kotest.runner.junit5)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
 }

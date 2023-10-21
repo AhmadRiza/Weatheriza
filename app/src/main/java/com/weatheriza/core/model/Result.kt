@@ -39,7 +39,7 @@ sealed class Result<out T : Any> {
 fun ErrorNetworkResult.toErrorResult(): Result.Error {
     return when (this) {
         is ErrorNetworkResult.NetworkError -> {
-            Result.Error(errorMessage)
+            Result.Error(errorMessage, httpCode)
         }
 
         is ErrorNetworkResult.NoInternetConnection -> {

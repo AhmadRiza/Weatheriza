@@ -3,7 +3,9 @@ package com.weatheriza.data.model
 data class Forecast(
     val date: Long,
     val temperature: Float,
+    val feelsLike: Float,
     val humidity: Float,
+    val windSpeed: Float,
     val weather: Weather,
     val city: City
 )
@@ -28,8 +30,8 @@ enum class WeatherType {
 data class City(
     val name: String,
     val country: String,
-    val sunset: Long,
     val sunrise: Long,
+    val sunset: Long,
     val latitude: Double,
     val longitude: Double
 )
