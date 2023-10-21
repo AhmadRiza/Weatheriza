@@ -1,19 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingHorizontal="16dp"
-    android:paddingVertical="42dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:clipChildren="false"
+    android:background="#B3E5FC"
+    android:clipToPadding="false"
+    android:padding="24dp">
+
+    <View
+        android:layout_width="400dp"
+        android:layout_height="400dp"
+        android:background="@drawable/shape_circle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="-100dp"
+        android:layout_marginBottom="-100dp" />
 
     <TextView
         android:id="@+id/textWeatherType"
         style="@style/Typography.Body.Bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="24sp"
+        android:layout_marginTop="42dp"
         android:textColor="@color/gray_dark"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -47,8 +59,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:textSize="40sp"
         android:textColor="@color/gray_dark"
+        android:textSize="40sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageIcon"
@@ -67,10 +79,12 @@
     <TextView
         android:id="@+id/textFeelsLike"
         style="@style/Typography.Body"
-        android:textSize="12sp"
-        android:textColor="@color/gray_light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="56dp"
+        android:textColor="@color/gray_light"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textTemperature"
@@ -121,6 +135,29 @@
         app:layout_constraintStart_toStartOf="@+id/imageHumidityIcon"
         app:layout_constraintTop_toBottomOf="@+id/imageHumidityIcon"
         tools:text="30%" />
+
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imageFavorite"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:tint="@color/smoke"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_favorite"
+        tools:tint="@color/md_pink_500" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imageSearch"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:tint="@color/smoke"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_search"
+        tools:tint="@color/gray" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
