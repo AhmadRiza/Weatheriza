@@ -59,15 +59,31 @@ class MainActivity :
     private fun setupView() {
         binding.layoutWeather.run {
             buttonSearch.setOnClickListener {
+                dispatch(MainViewModel.Intent.OnChangeLocation)
+            }
+            buttonFavorite.setOnClickListener {
+                dispatch(MainViewModel.Intent.OnFavoriteClick)
+            }
+        }
+        binding.layoutError.run {
+            buttonTryAgain.setOnClickListener { dispatch(MainViewModel.Intent.OnRetry) }
+            buttonChangeLocation.setOnClickListener {
+                dispatch(MainViewModel.Intent.OnChangeLocation)
+            }
+        }
+        binding.swipeRefresh.setOnRefreshListener {
+            dispatch(MainViewModel.Intent.OnRefresh)
+        }
+    }
+
+    override fun renderEffect(effect: MainViewModel.Effect) {
+        when (effect) {
+            MainViewModel.Effect.GoToSearch -> {
                 searchActivityLauncher.launch(
                     SearchLocationActivity.createIntent(this@MainActivity)
                 )
             }
         }
-    }
-
-    override fun renderEffect(effect: MainViewModel.Effect) {
-
     }
 
     override fun invalidate(state: MainViewModel.State) {
@@ -79,12 +95,14 @@ class MainActivity :
             }
 
             MainDisplayState.Loading -> {
+                binding.layoutError.root.isVisible = false
                 binding.swipeRefresh.isVisible = true
                 binding.layoutContent.isInvisible = true
                 binding.swipeRefresh.isRefreshing = true
             }
 
             is MainDisplayState.Success -> {
+                binding.layoutError.root.isVisible = false
                 binding.swipeRefresh.isVisible = true
                 binding.layoutContent.isInvisible = false
                 binding.swipeRefresh.isRefreshing = false

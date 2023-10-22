@@ -15,6 +15,13 @@ class SearchLocationUseCase @Inject constructor(
     override suspend fun build(params: String?): Flow<SearchDisplayState> {
         requireNotNull(params)
         return flow {
+            if (params.length < 3) {
+                val favorites = repository.getAllFavoriteCity().map {
+                    GeoLocationItemModel.GeoLocationItem(it, true)
+                }
+                emit(SearchDisplayState.DisplayLocationList(favorites))
+                return@flow
+            }
             emit(SearchDisplayState.DisplayLocationList(listOf(GeoLocationItemModel.Loading())))
             when (val result = repository.searchGeoLocation(params)) {
                 is Result.Error -> emit(SearchDisplayState.Error(result.errorMessage))

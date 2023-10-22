@@ -29,6 +29,8 @@ kotest = "5.6.2"
 mockk = "1.13.8"
 kotestJunit = "5.10.0"
 
+room = "2.6.0"
+
 
 # Build tool
 # This lib is used to make sure we can use Time API in older android version
@@ -72,6 +74,12 @@ android-annotations = { module = "androidx.annotation:annotation", version.ref =
 javax-inject = { module = "javax.inject:javax.inject", version.ref = "javaxInject" }
 hilt = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
+
+# ROOM
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+
 
 # Test
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }

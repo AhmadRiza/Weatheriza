@@ -1,5 +1,7 @@
 package com.weatheriza.di
 
+import com.weatheriza.data.local.OpenWeatherLocalDataSource
+import com.weatheriza.data.local.OpenWeatherLocalDataSourceImpl
 import com.weatheriza.data.remote.OpenWeatherRemoteDataSource
 import com.weatheriza.data.remote.OpenWeatherRemoteDataSourceImpl
 import com.weatheriza.data.repository.OpenWeatherRepository
@@ -22,5 +24,10 @@ abstract class DataModule {
     abstract fun bindsOpenWeatherRepository(
         impl: OpenWeatherRepositoryImpl
     ): OpenWeatherRepository
+
+    @Binds
+    abstract fun bindLocalDataSource(
+        impl: OpenWeatherLocalDataSourceImpl
+    ): OpenWeatherLocalDataSource
 
 }

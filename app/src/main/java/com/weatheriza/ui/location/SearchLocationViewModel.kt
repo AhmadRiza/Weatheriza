@@ -28,7 +28,9 @@ class SearchLocationViewModel @Inject constructor(
         data class OnQueryChanged(val query: String) : Intent
     }
 
-    interface Effect
+    sealed interface Effect {
+        data object ShowKeyBoard : Effect
+    }
 
     private var searchJob: Job? = null
 
@@ -36,7 +38,8 @@ class SearchLocationViewModel @Inject constructor(
         when (intent) {
             is Intent.OnQueryChanged -> onQueryChanged(intent.query)
             Intent.OnViewCreated -> {
-
+                onQueryChanged("")
+                setEffect(Effect.ShowKeyBoard)
             }
         }
     }

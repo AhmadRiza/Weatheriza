@@ -91,6 +91,13 @@ dependencies {
     implementation(libs.retrofit.converter.gson)
     implementation(libs.coil)
 
+    // ROOM
+    implementation(libs.room.runtime)
+    annotationProcessor(libs.room.compiler)
+    kapt(libs.room.compiler)
+    implementation(libs.room.ktx)
+
+
     debugImplementation(libs.chucker)
     releaseImplementation(libs.chucker.noop)
 

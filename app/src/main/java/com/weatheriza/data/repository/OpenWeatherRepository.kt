@@ -11,4 +11,9 @@ interface OpenWeatherRepository {
         longitude: Double
     ): Result<FiveDayForecast>
 
+    var lastViewedLocation: GeoLocation
+    suspend fun saveFavoriteCity(city: GeoLocation)
+    suspend fun deleteFavoriteCity(name: String)
+    suspend fun getAllFavoriteCity(): List<GeoLocation>
+    suspend fun isFavorite(name: String): Boolean
 }

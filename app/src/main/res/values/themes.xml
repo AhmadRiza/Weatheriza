@@ -4,7 +4,7 @@
         <!-- Customize your light theme here. -->
         <item name="colorPrimary">@color/md_blue_200</item>
         <item name="colorPrimaryVariant">@color/md_blue_200</item>
-        <item name="colorSecondary">@color/md_blue_200</item>
+        <item name="colorSecondary">@color/gray</item>
         <item name="colorSecondaryVariant">@color/md_blue_200</item>
         <item name="android:colorBackground">@color/white</item>
         <item name="colorSurface">@color/white</item>

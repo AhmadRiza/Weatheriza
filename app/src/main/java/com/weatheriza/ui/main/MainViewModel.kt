@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.weatheriza.core.base.BaseViewModel
 import com.weatheriza.data.model.Forecast
 import com.weatheriza.data.model.GeoLocation
+import com.weatheriza.data.repository.OpenWeatherRepository
 import com.weatheriza.ui.main.state.ForecastDisplayItemModel
 import com.weatheriza.ui.main.state.MainDisplayState
 import com.weatheriza.ui.main.usecase.GetDisplayWeatherForecastUseCase
@@ -20,7 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val getDisplayWeatherForecast: GetDisplayWeatherForecastUseCase,
-    private val getWeatherDisplayModel: GetWeatherDisplayModelUseCase
+    private val getWeatherDisplayModel: GetWeatherDisplayModelUseCase,
+    private val repository: OpenWeatherRepository
 ) : BaseViewModel<MainViewModel.Intent, MainViewModel.State, MainViewModel.Effect>(State()) {
 
     data class State(
@@ -32,33 +34,61 @@ class MainViewModel @Inject constructor(
         data object OnViewCreated : Intent
         data class OnGeoLocationReceived(val location: GeoLocation) : Intent
         data class OnForecastClick(val forecastModel: ForecastDisplayItemModel) : Intent
+
+        data object OnFavoriteClick : Intent
+
+        data object OnRefresh : Intent
+        data object OnRetry : Intent
+        data object OnChangeLocation : Intent
     }
 
-    sealed interface Effect
+    sealed interface Effect {
+        data object GoToSearch : Effect
+    }
 
+    private lateinit var geoLocation: GeoLocation
     private var currentForecast: List<Forecast> = emptyList()
     private val mutex = Mutex()
 
     override fun onIntentReceived(intent: Intent) {
         when (intent) {
-            is Intent.OnGeoLocationReceived -> loadWeather(intent.location)
+            is Intent.OnGeoLocationReceived -> {
+                geoLocation = intent.location
+                loadWeather(intent.location)
+            }
+
             is Intent.OnForecastClick -> {
                 onOnForecastClick(intent.forecastModel)
             }
 
             Intent.OnViewCreated -> onViewCreated()
+            Intent.OnFavoriteClick -> onFavoriteClick()
+            Intent.OnRefresh -> loadWeather(geoLocation)
+            Intent.OnRetry -> loadWeather(geoLocation)
+            Intent.OnChangeLocation -> {
+                setEffect(Effect.GoToSearch)
+            }
+        }
+    }
+
+    private fun onFavoriteClick() {
+        viewModelScope.launch {
+            val display = (viewState.displayState as? MainDisplayState.Success) ?: return@launch
+            if (!display.isCityFavorite) {
+                repository.saveFavoriteCity(geoLocation)
+            } else {
+                repository.deleteFavoriteCity(geoLocation.name)
+            }
+            setState {
+                copy(displayState = display.copy(isCityFavorite = !display.isCityFavorite))
+            }
         }
     }
 
     private fun onViewCreated() {
-        loadWeather(
-            GeoLocation(
-                name = "Jak",
-                countryCode = "Id",
-                latitude = -7.6290837,
-                longitude = 111.5168819
-            )
-        )
+        val lastLocation = repository.lastViewedLocation
+        loadWeather(lastLocation)
+        geoLocation = lastLocation
     }
 
     private fun loadWeather(geoLocation: GeoLocation) {

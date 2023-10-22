@@ -7,7 +7,9 @@ import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import com.weatheriza.core.base.BaseVMActivity
+import com.weatheriza.core.utils.showKeyboard
 import com.weatheriza.databinding.ActivitySearchBinding
+import com.weatheriza.ui.location.SearchLocationViewModel.Intent.OnQueryChanged
 import com.weatheriza.ui.location.state.SearchDisplayState
 import com.weatheriza.ui.main.MainActivity.Companion.EXTRA_KEY_GEOLOCATION
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,10 +35,16 @@ class SearchLocationActivity : BaseVMActivity<SearchLocationViewModel.Intent,
         setContentView(binding.root)
         configureViews()
         configureToolbar()
+        dispatch(SearchLocationViewModel.Intent.OnViewCreated)
     }
 
     override fun renderEffect(effect: SearchLocationViewModel.Effect) {
-
+        when (effect) {
+            SearchLocationViewModel.Effect.ShowKeyBoard -> {
+                binding.editTextSearch.requestFocus()
+                showKeyboard()
+            }
+        }
     }
 
     override fun invalidate(state: SearchLocationViewModel.State) {
@@ -46,15 +54,16 @@ class SearchLocationActivity : BaseVMActivity<SearchLocationViewModel.Intent,
                 geoLocationAdapter.submitList(display.geoLocationItems)
             }
 
+            SearchDisplayState.LocationNotFound,
             SearchDisplayState.Empty -> {
                 binding.layoutError.root.isVisible = false
                 geoLocationAdapter.submitList(emptyList())
             }
 
-            SearchDisplayState.LocationNotFound,
             is SearchDisplayState.Error -> {
                 geoLocationAdapter.submitList(emptyList())
                 binding.layoutError.root.isVisible = true
+                binding.layoutError.textErrorMessage.text = display.message
             }
         }
     }
@@ -68,9 +77,12 @@ class SearchLocationActivity : BaseVMActivity<SearchLocationViewModel.Intent,
         binding.recyclerViewLocations.adapter = geoLocationAdapter
 
         binding.editTextSearch.doAfterTextChanged {
-            dispatch(SearchLocationViewModel.Intent.OnQueryChanged(it?.toString().orEmpty()))
+            dispatch(OnQueryChanged(it?.toString().orEmpty()))
         }
         binding.layoutError.buttonChangeLocation.isVisible = false
+        binding.layoutError.buttonTryAgain.setOnClickListener {
+            dispatch(OnQueryChanged(binding.editTextSearch.text.toString()))
+        }
     }
 
     private fun initGeoLocationAdapter(): GeoLocationAdapter {
