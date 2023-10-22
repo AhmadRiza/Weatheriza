@@ -3,8 +3,6 @@ package com.weatheriza.ui.main.state
 import com.weatheriza.data.model.WeatherType
 
 data class WeatherDisplayModel(
-    val cityLabel: String,
-    val isCityFavorite: Boolean,
     val weatherLabel: String,
     val weatherIconUrl: String,
     val temperature: String,

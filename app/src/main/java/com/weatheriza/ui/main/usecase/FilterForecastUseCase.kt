@@ -13,7 +13,7 @@ import kotlinx.datetime.toLocalDateTime
 import javax.inject.Inject
 import kotlin.math.abs
 
-class FilterForecast @Inject constructor(
+class FilterForecastUseCase @Inject constructor(
     private val timeAndLocaleProvider: TimeAndLocaleProvider
 ) : NonSuspendingUseCase<List<Forecast>, List<Forecast>>() {
     companion object {

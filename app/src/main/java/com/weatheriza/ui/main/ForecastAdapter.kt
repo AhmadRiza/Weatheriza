@@ -28,10 +28,11 @@ class ForecastAdapter(
     }
 
     override fun onBindViewHolder(holder: ForeCastViewHolder, position: Int) {
+        val item = getItem(position)
         holder.onClickListener = OnClickListener {
-
+            onViewEvent(ForecastAdapterEvent.OnForecastClick(item))
         }
-        holder.bindModel(getItem(position))
+        holder.bindModel(item)
     }
 }
 
@@ -53,7 +54,7 @@ class ForeCastViewHolder(private val binding: ItemForecastBinding) : ViewHolder(
 }
 
 sealed interface ForecastAdapterEvent {
-    data class OnForecastClick(val dateUnix: Long) : ForecastAdapterEvent
+    data class OnForecastClick(val model: ForecastDisplayItemModel) : ForecastAdapterEvent
 }
 
 private fun buildItemDiffer() = AsyncDifferConfig.Builder(

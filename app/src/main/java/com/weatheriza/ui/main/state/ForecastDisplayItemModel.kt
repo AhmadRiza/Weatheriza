@@ -1,7 +1,7 @@
 package com.weatheriza.ui.main.state
 
 data class ForecastDisplayItemModel(
-    val dateUnix: String,
+    val dateUnix: Long,
     val dayLabel: String,
     val dateLabel: String,
     val weatherIconUrl: String,

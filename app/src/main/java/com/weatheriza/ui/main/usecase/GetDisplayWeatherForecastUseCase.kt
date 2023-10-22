@@ -7,22 +7,20 @@ import com.weatheriza.core.datetime.displayDay
 import com.weatheriza.core.datetime.parseUnixDateTime
 import com.weatheriza.core.model.DefaultErrorMessage
 import com.weatheriza.core.model.Result
-import com.weatheriza.data.model.FiveDayForecast
 import com.weatheriza.data.model.Forecast
 import com.weatheriza.data.model.GeoLocation
 import com.weatheriza.data.repository.OpenWeatherRepository
 import com.weatheriza.ui.main.state.ForecastDisplayItemModel
 import com.weatheriza.ui.main.state.MainDisplayState
-import com.weatheriza.ui.main.state.WeatherDisplayModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class GetDisplayWeatherForecastUseCase @Inject constructor(
     private val repository: OpenWeatherRepository,
-    private val filterForecast: FilterForecast,
-    private val timeAndLocaleProvider: TimeAndLocaleProvider
+    private val filterForecast: FilterForecastUseCase,
+    private val timeAndLocaleProvider: TimeAndLocaleProvider,
+    private val getWeatherDisplay: GetWeatherDisplayModelUseCase
 ) : BaseUseCase<Flow<GetDisplayWeatherForecastUseCase.Event>, GeoLocation>() {
 
     sealed interface Event {
@@ -44,48 +42,37 @@ class GetDisplayWeatherForecastUseCase @Inject constructor(
                             MainDisplayState.Error(DefaultErrorMessage.UNKNOWN)
                         )
                     )
-
                 is Result.Success.WithData -> {
-                    proceedSuccessData(result.data)
+                    val filteredForeCast = filterForecast(result.data.forecasts)
+                    emit(Event.SaveCurrentForecast(filteredForeCast))
+                    val todayForecast = filteredForeCast.first()
+                    MainDisplayState.Success(
+                        cityLabel = "${result.data.city.name}, ${result.data.city.country}",
+                        isCityFavorite = false,
+                        displayedWeather = getWeatherDisplay(todayForecast),
+                        forecasts = filteredForeCast.toForecastDisplayItemModels()
+                    ).let {
+                        emit(Event.UpdateDisplayState(it))
+                    }
                 }
             }
         }
     }
 
-    private suspend fun FlowCollector<Event>.proceedSuccessData(data: FiveDayForecast) {
-
-        val filteredForeCast = filterForecast(data.forecasts)
-        emit(Event.SaveCurrentForecast(filteredForeCast))
-
-        val todayForecast = filteredForeCast.last()
-        MainDisplayState.Success(
-            displayedWeather = WeatherDisplayModel(
-                cityLabel = "${data.city.name}, ${data.city.country}",
-                isCityFavorite = false,
-                weatherLabel = todayForecast.weather.label,
-                weatherIconUrl = todayForecast.weather.iconUrl,
-                temperature = todayForecast.temperature.toInt().toString(),
-                feelsLikeLabel = "Feels like ${todayForecast.feelsLike}°C",
-                windSpeed = "${todayForecast.windSpeed} km/h",
-                humidity = "${todayForecast.humidity}%",
-                weatherType = todayForecast.weather.weatherType
-            ),
-            forecasts = filteredForeCast.mapIndexed { index, forecast ->
-                val dateTime = parseUnixDateTime(
-                    forecast.date,
-                    timeAndLocaleProvider.defaultTimezone
-                )
-                ForecastDisplayItemModel(
-                    dateUnix = forecast.date.toString(),
-                    dayLabel = if (index == 0) "Today" else dateTime.displayDay(),
-                    dateLabel = dateTime.displayDate(),
-                    weatherIconUrl = forecast.weather.iconUrl,
-                    temperature = "${forecast.temperature}°C",
-                    isSelected = index == 0
-                )
-            }
-        ).let {
-            emit(Event.UpdateDisplayState(it))
+    private fun List<Forecast>.toForecastDisplayItemModels(): List<ForecastDisplayItemModel> {
+        return mapIndexed { index, forecast ->
+            val dateTime = parseUnixDateTime(
+                forecast.date,
+                timeAndLocaleProvider.defaultTimezone
+            )
+            ForecastDisplayItemModel(
+                dateUnix = forecast.date,
+                dayLabel = if (index == 0) "Today" else dateTime.displayDay(),
+                dateLabel = dateTime.displayDate(),
+                weatherIconUrl = forecast.weather.iconUrl,
+                temperature = "${forecast.temperature}°C",
+                isSelected = index == 0
+            )
         }
     }
 

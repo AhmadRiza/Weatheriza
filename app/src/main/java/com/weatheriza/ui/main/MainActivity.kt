@@ -80,21 +80,34 @@ class MainActivity :
                 binding.swipeRefresh.isVisible = true
                 binding.layoutContent.isInvisible = false
                 binding.swipeRefresh.isRefreshing = false
-                binding.layoutWeather.setState(display.displayedWeather)
+                binding.layoutWeather.setState(
+                    display.displayedWeather,
+                    cityLabel = display.cityLabel,
+                    isCityFavorite = display.isCityFavorite
+                )
                 forecastAdapter.submitList(display.forecasts)
             }
         }
     }
 
-    private fun ItemWeatherBinding.setState(model: WeatherDisplayModel) {
+    private fun ItemWeatherBinding.setState(
+        model: WeatherDisplayModel,
+        cityLabel: String,
+        isCityFavorite: Boolean
+    ) {
         textWeatherType.text = model.weatherLabel
-        textCityName.text = model.cityLabel
+        textCityName.text = cityLabel
+
+        val colorFavorite = if (isCityFavorite) R.color.md_pink_500 else R.color.smoke
+        buttonFavorite.setIconTintResource(colorFavorite)
+
         textWindSpeed.text = model.windSpeed
         textTemperature.text = model.temperature
         textFeelsLike.text = model.feelsLikeLabel
         textHumidity.text = model.humidity
         imageIcon.load(model.weatherIconUrl)
     }
+
 
     private fun setupForecastList() {
         binding.recyclerViewForecast.run {
@@ -106,7 +119,7 @@ class MainActivity :
         return ForecastAdapter {
             when (it) {
                 is ForecastAdapterEvent.OnForecastClick -> dispatch(
-                    MainViewModel.Intent.OnForecastClick(it.dateUnix)
+                    MainViewModel.Intent.OnForecastClick(it.model)
                 )
             }
         }

@@ -18,5 +18,5 @@ fun LocalDateTime.displayDay(): String {
 
 fun LocalDateTime.displayDate(): String {
     val month = month.name.lowercase().replaceFirstChar { it.uppercase() }
-    return "$date $month $year $hour:$minute"
+    return "$dayOfMonth $month $year"
 }
