@@ -47,7 +47,7 @@ fun ErrorNetworkResult.toErrorResult(): Result.Error {
         }
 
         is ErrorNetworkResult.UnknownError -> {
-            Result.Error.unknown()
+            Result.Error(cause)
         }
     }
 }

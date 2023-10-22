@@ -3,10 +3,16 @@ package com.weatheriza.data.remote.entity
 import androidx.annotation.Keep
 
 @Keep
+data class FiveDaysForecastEntity(
+    val list: List<ForecastEntity>?
+)
+
+@Keep
 data class ForecastEntity(
     val dt: Long?,
+    val dtTxt: String?,
     val main: MainEntity?,
-    val weather: WeatherEntity?,
+    val weather: List<WeatherEntity>?,
     val wind: WindEntity?,
     val city: CityEntity?
 ) {

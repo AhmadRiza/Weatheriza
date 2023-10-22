@@ -1,6 +1,6 @@
 package com.weatheriza.data.remote.service
 
-import com.weatheriza.data.remote.entity.ForecastEntity
+import com.weatheriza.data.remote.entity.FiveDaysForecastEntity
 import com.weatheriza.data.remote.entity.GeoLocationEntity
 import retrofit2.Response
 import retrofit2.http.GET
@@ -23,6 +23,6 @@ interface OpenWeatherService {
         @Query("lat") latitude: Double,
         @Query("lon") longitude: Double,
         @Query("units") units: String = DEFAULT_UNIT,
-    ): Response<List<ForecastEntity>>
+    ): Response<FiveDaysForecastEntity>
 
 }

@@ -2,6 +2,7 @@ package com.weatheriza.data.model
 
 data class Forecast(
     val date: Long,
+    val dateString: String,
     val temperature: Float,
     val feelsLike: Float,
     val humidity: Float,

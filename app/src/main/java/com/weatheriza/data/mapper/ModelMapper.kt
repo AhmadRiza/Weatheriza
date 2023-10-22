@@ -12,15 +12,18 @@ import com.weatheriza.data.remote.entity.GeoLocationEntity
 fun ForecastEntity.toForecast(): Forecast {
     return Forecast(
         date = dt ?: 0L,
+        dateString = dtTxt.orEmpty(),
         temperature = main?.temp ?: 0.0f,
         feelsLike = main?.feelsLike ?: 0.0f,
         humidity = main?.humidity ?: 0.0f,
-        weather = Weather(
-            weatherType = weather.getWeatherType(),
-            label = weather?.main.orEmpty(),
-            description = weather?.description.orEmpty(),
-            iconUrl = HostUrl.OPEN_WEATHER_ICON_URL.format(weather?.icon.orEmpty())
-        ),
+        weather = weather?.first().let {
+            Weather(
+                weatherType = it.getWeatherType(),
+                label = it?.main.orEmpty(),
+                description = it?.description.orEmpty(),
+                iconUrl = HostUrl.OPEN_WEATHER_ICON_URL.format(it?.icon.orEmpty())
+            )
+        },
         windSpeed = wind?.speed ?: 0.0f,
         city = City(
             name = city?.name.orEmpty(),
@@ -53,6 +56,5 @@ fun GeoLocationEntity.toGeoLocation(): GeoLocation {
         countryCode = countryCode.orEmpty(),
         latitude = lat ?: 0.0,
         longitude = lon ?: 0.0
-
     )
 }

@@ -2,6 +2,8 @@ package com.weatheriza.di
 
 import com.weatheriza.data.remote.OpenWeatherRemoteDataSource
 import com.weatheriza.data.remote.OpenWeatherRemoteDataSourceImpl
+import com.weatheriza.data.repository.OpenWeatherRepository
+import com.weatheriza.data.repository.OpenWeatherRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -15,5 +17,10 @@ abstract class DataModule {
     abstract fun bindsOpenWeatherRemoteDataSource(
         impl: OpenWeatherRemoteDataSourceImpl
     ): OpenWeatherRemoteDataSource
+
+    @Binds
+    abstract fun bindsOpenWeatherRepository(
+        impl: OpenWeatherRepositoryImpl
+    ): OpenWeatherRepository
 
 }

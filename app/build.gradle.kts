@@ -42,6 +42,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
         jvmTarget = "17"
@@ -66,10 +67,15 @@ dependencies {
     implementation(libs.material)
     implementation(libs.constraintlayout)
     implementation(libs.swiperefresh)
+    implementation(libs.activity.ktx)
 
     // Kotlin
     implementation(libs.coroutines.core)
     implementation(libs.kotlin.datetime)
+
+    // Android Architecture Components
+    implementation(libs.lifecycle.livedata.core.ktx)
+    implementation(libs.lifecycle.runtime.ktx)
 
     // DI
     implementation(libs.javax.inject)
@@ -80,9 +86,11 @@ dependencies {
     // Networking
     implementation(libs.gson)
     implementation(libs.okhttp)
-    implementation(libs.okhttp.logging)
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
+    implementation(libs.coil)
+
+
 
     testImplementation(libs.junit)
     testImplementation(libs.coroutines.test)
@@ -92,6 +100,9 @@ dependencies {
     testImplementation(libs.kotest.runner.junit5)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    coreLibraryDesugaring(libs.desugar) {
+        because("Needed for java.time compatibility on os below API 26")
+    }
 }
 
 kapt {

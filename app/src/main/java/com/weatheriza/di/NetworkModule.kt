@@ -4,6 +4,7 @@ import android.content.Context
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.weatheriza.BuildConfig
 import com.weatheriza.core.network.HostUrl
 import com.weatheriza.core.network.interceptor.ApiKeyInterceptor
 import com.weatheriza.core.network.interceptor.InternetConnectionInterceptor
@@ -43,7 +44,7 @@ object NetworkModule {
     @OpenWeatherApiKey
     @Provides
     fun provideOpenWeatherApiKey(): String {
-        return ""
+        return BuildConfig.OPEN_WEATHER_API_KEY
     }
 
     @ApiKeyOkHttpInterceptor

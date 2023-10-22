@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Weatheriza</string>
     <string name="celcius">°C</string>
+    <string name="default_error_message">Something Wrong!</string>
+    <string name="button_try_again_label">Try again</string>
+    <string name="button_change_location">Change Location</string>
 </resources>

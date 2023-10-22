@@ -1,7 +1,7 @@
 package com.weatheriza.data.remote
 
 import com.weatheriza.core.entities.NetworkResult
-import com.weatheriza.data.remote.entity.ForecastEntity
+import com.weatheriza.data.remote.entity.FiveDaysForecastEntity
 import com.weatheriza.data.remote.entity.GeoLocationEntity
 
 interface OpenWeatherRemoteDataSource {
@@ -9,5 +9,5 @@ interface OpenWeatherRemoteDataSource {
     suspend fun getFiveDaysForecast(
         latitude: Double,
         longitude: Double
-    ): NetworkResult<List<ForecastEntity>>
+    ): NetworkResult<FiveDaysForecastEntity>
 }

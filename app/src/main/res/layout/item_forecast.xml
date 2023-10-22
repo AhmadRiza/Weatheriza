@@ -12,12 +12,24 @@
         style="@style/Typography.Body.SemiBold"
         android:layout_width="0dp"
         android:textColor="@color/gray_dark"
-        android:layout_margin="24dp"
+        android:layout_margin="16dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Sunday" />
+
+    <TextView
+        android:id="@+id/textDate"
+        style="@style/Typography.Body"
+        android:layout_width="0dp"
+        android:textColor="@color/gray_light"
+        android:textSize="12sp"
+        android:layout_marginBottom="16dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/textDayName"
+        app:layout_constraintTop_toBottomOf="@id/textDayName"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:text="11 September 2022" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imageWeatherIcon"

@@ -25,8 +25,8 @@ class OpenWeatherRepositoryImpl @Inject constructor(
         longitude: Double
     ): Result<List<Forecast>> {
         return weatherRemoteDataSource.getFiveDaysForecast(latitude, longitude)
-            .toResult { forecastEntities ->
-                forecastEntities.map { it.toForecast() }
+            .toResult { forecastEntity ->
+                forecastEntity.list.orEmpty().map { it.toForecast() }
             }
     }
 
