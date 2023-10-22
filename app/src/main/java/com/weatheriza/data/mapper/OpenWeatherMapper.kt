@@ -60,7 +60,7 @@ fun FiveDaysForecastEntity.ForecastEntity.WeatherEntity?.getWeatherType(): Weath
 fun GeoLocationEntity.toGeoLocation(): GeoLocation {
     return GeoLocation(
         name = name.orEmpty(),
-        countryCode = countryCode.orEmpty(),
+        countryCode = country.orEmpty(),
         latitude = lat ?: 0.0,
         longitude = lon ?: 0.0
     )

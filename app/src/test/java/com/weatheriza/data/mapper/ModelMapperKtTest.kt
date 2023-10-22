@@ -85,7 +85,7 @@ class ModelMapperKtTest : ShouldSpec() {
         context("geo location entity to geo location") {
             val mockGeoLocation = GeoLocationEntity(
                 name = "Jakarta",
-                countryCode = "ID",
+                country = "ID",
                 lat = 11.0,
                 lon = 22.00
             )

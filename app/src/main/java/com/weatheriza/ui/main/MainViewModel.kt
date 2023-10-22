@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.weatheriza.core.base.BaseViewModel
 import com.weatheriza.data.model.GeoLocation
 import com.weatheriza.ui.main.state.MainDisplayState
-import com.weatheriza.ui.main.usecase.GetDisplayWeatherForecast
+import com.weatheriza.ui.main.usecase.GetDisplayWeatherForecastUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val getDisplayWeatherForecast: GetDisplayWeatherForecast
+    private val getDisplayWeatherForecast: GetDisplayWeatherForecastUseCase
 ) : BaseViewModel<MainViewModel.Intent, MainViewModel.State, MainViewModel.Effect>(State()) {
 
     data class State(

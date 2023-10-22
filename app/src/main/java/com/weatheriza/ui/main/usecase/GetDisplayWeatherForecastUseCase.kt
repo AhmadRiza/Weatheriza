@@ -21,7 +21,7 @@ import kotlinx.datetime.toLocalDateTime
 import javax.inject.Inject
 import kotlin.math.abs
 
-class GetDisplayWeatherForecast @Inject constructor(
+class GetDisplayWeatherForecastUseCase @Inject constructor(
     private val repository: OpenWeatherRepository
 ) : BaseUseCase<Flow<MainDisplayState>, GeoLocation>() {
 

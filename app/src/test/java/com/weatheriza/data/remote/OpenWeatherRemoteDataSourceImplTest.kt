@@ -19,7 +19,7 @@ class OpenWeatherRemoteDataSourceImplTest : ShouldSpec() {
         context("searchGeoLocation") {
             val mockEntity = GeoLocationEntity(
                 name = "Jkt",
-                countryCode = "ID",
+                country = "ID",
                 lat = 11.0,
                 lon = 22.0
             )
