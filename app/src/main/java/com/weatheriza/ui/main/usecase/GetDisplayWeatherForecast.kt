@@ -7,7 +7,7 @@ import com.weatheriza.data.model.FiveDayForecast
 import com.weatheriza.data.model.Forecast
 import com.weatheriza.data.model.GeoLocation
 import com.weatheriza.data.repository.OpenWeatherRepository
-import com.weatheriza.ui.main.state.ForeCastDisplayItemModel
+import com.weatheriza.ui.main.state.ForecastDisplayItemModel
 import com.weatheriza.ui.main.state.MainDisplayState
 import com.weatheriza.ui.main.state.WeatherDisplayModel
 import kotlinx.coroutines.flow.Flow
@@ -72,8 +72,8 @@ class GetDisplayWeatherForecast @Inject constructor(
                 weatherType = todayForecast.weather.weatherType
             ),
             forecasts = closestTimeForecast.map { forecast ->
-                ForeCastDisplayItemModel(
-                    id = forecast.date.toString(),
+                ForecastDisplayItemModel(
+                    dateUnix = forecast.date.toString(),
                     dayLabel = forecast.dateTime.dayOfWeek.name.lowercase()
                         .replaceFirstChar { it.uppercase() },
                     dateLabel = forecast.dateTime.toString(),

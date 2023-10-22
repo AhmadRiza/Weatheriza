@@ -5,7 +5,7 @@ sealed interface MainDisplayState {
     data class Error(val message: String) : MainDisplayState
     data class Success(
         val displayedWeather: WeatherDisplayModel,
-        val forecasts: List<ForeCastDisplayItemModel>
+        val forecasts: List<ForecastDisplayItemModel>
     ) : MainDisplayState
 
 }

@@ -1,7 +1,6 @@
 package com.weatheriza.ui.main
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
@@ -12,6 +11,8 @@ import com.weatheriza.databinding.ActivityMainBinding
 import com.weatheriza.databinding.ItemWeatherBinding
 import com.weatheriza.ui.main.state.MainDisplayState
 import com.weatheriza.ui.main.state.WeatherDisplayModel
+import com.weatheriza.ui.main.usecase.ForecastAdapter
+import com.weatheriza.ui.main.usecase.ForecastAdapterEvent
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -24,11 +25,15 @@ class MainActivity :
     override val viewModel: MainViewModel by viewModels()
 
     private lateinit var binding: ActivityMainBinding
+    private val forecastAdapter = initForecastAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        setupForecastList()
+
         dispatch(
             MainViewModel.Intent.OnViewCreated(
                 location = GeoLocation(
@@ -46,7 +51,6 @@ class MainActivity :
     }
 
     override fun invalidate(state: MainViewModel.State) {
-        Log.e("state", state.toString())
         when (val display = state.displayState) {
             is MainDisplayState.Error -> {
                 binding.swipeRefresh.isInvisible = true
@@ -65,6 +69,7 @@ class MainActivity :
                 binding.layoutContent.isInvisible = false
                 binding.swipeRefresh.isRefreshing = false
                 binding.layoutWeather.setState(display.displayedWeather)
+                forecastAdapter.submitList(display.forecasts)
             }
         }
     }
@@ -76,7 +81,22 @@ class MainActivity :
         textTemperature.text = model.temperature
         textFeelsLike.text = model.feelsLikeLabel
         textHumidity.text = model.humidity
-        Log.e("load from", model.weatherIconUrl)
         imageIcon.load(model.weatherIconUrl)
+    }
+
+    private fun setupForecastList() {
+        binding.recyclerViewForecast.run {
+            adapter = forecastAdapter
+        }
+    }
+
+    private fun initForecastAdapter(): ForecastAdapter {
+        return ForecastAdapter {
+            when (it) {
+                is ForecastAdapterEvent.OnForecastClick -> dispatch(
+                    MainViewModel.Intent.OnForecastClick(it.dateUnix)
+                )
+            }
+        }
     }
 }

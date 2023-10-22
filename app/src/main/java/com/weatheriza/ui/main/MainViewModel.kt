@@ -22,6 +22,7 @@ class MainViewModel @Inject constructor(
 
     sealed interface Intent {
         data class OnViewCreated(val location: GeoLocation) : Intent
+        data class OnForecastClick(val dateUnix: Long) : Intent
     }
 
     sealed interface Effect
@@ -29,6 +30,9 @@ class MainViewModel @Inject constructor(
     override fun onIntentReceived(intent: Intent) {
         when (intent) {
             is Intent.OnViewCreated -> onViewCreated(intent.location)
+            is Intent.OnForecastClick -> {
+
+            }
         }
     }
 
