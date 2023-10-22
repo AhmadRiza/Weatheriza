@@ -3,6 +3,7 @@ package com.weatheriza.ui.main.usecase
 import android.view.LayoutInflater
 import android.view.View.OnClickListener
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.AsyncDifferConfig
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -45,6 +46,8 @@ class ForeCastViewHolder(private val binding: ItemForecastBinding) : ViewHolder(
             textDayName.text = model.dayLabel
             imageWeatherIcon.load(model.weatherIconUrl)
             textTemp.text = model.temperature
+            indicator.isVisible = model.isSelected
+            divider.isVisible = !model.isSelected
         }
     }
 }

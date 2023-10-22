@@ -2,9 +2,11 @@ package com.weatheriza.ui.main
 
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import coil.load
+import com.weatheriza.R
 import com.weatheriza.core.base.BaseVMActivity
 import com.weatheriza.data.model.GeoLocation
 import com.weatheriza.databinding.ActivityMainBinding
@@ -33,6 +35,7 @@ class MainActivity :
         setContentView(binding.root)
 
         setupForecastList()
+        window.statusBarColor = ContextCompat.getColor(this, R.color.md_blue_200)
 
         dispatch(
             MainViewModel.Intent.OnViewCreated(

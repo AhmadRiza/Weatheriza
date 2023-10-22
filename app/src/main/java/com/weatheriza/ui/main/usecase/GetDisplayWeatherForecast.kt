@@ -71,15 +71,15 @@ class GetDisplayWeatherForecast @Inject constructor(
                 humidity = "${todayForecast.humidity}%",
                 weatherType = todayForecast.weather.weatherType
             ),
-            forecasts = closestTimeForecast.map { forecast ->
+            forecasts = closestTimeForecast.mapIndexed { index, forecast ->
                 ForecastDisplayItemModel(
                     dateUnix = forecast.date.toString(),
                     dayLabel = forecast.dateTime.dayOfWeek.name.lowercase()
                         .replaceFirstChar { it.uppercase() },
                     dateLabel = forecast.dateTime.toString(),
                     weatherIconUrl = forecast.weather.iconUrl,
-                    temperature = forecast.temperature.toString(),
-                    isSelected = false
+                    temperature = "${forecast.temperature}°C",
+                    isSelected = index == 0
                 )
             }
         )
