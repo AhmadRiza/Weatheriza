@@ -1,6 +1,10 @@
 package com.weatheriza.ui.main.usecase
 
 import com.weatheriza.core.base.BaseUseCase
+import com.weatheriza.core.datetime.TimeAndLocaleProvider
+import com.weatheriza.core.datetime.displayDate
+import com.weatheriza.core.datetime.displayDay
+import com.weatheriza.core.datetime.parseUnixDateTime
 import com.weatheriza.core.model.DefaultErrorMessage
 import com.weatheriza.core.model.Result
 import com.weatheriza.data.model.FiveDayForecast
@@ -11,55 +15,50 @@ import com.weatheriza.ui.main.state.ForecastDisplayItemModel
 import com.weatheriza.ui.main.state.MainDisplayState
 import com.weatheriza.ui.main.state.WeatherDisplayModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
-import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.plus
-import kotlinx.datetime.toLocalDateTime
 import javax.inject.Inject
-import kotlin.math.abs
 
 class GetDisplayWeatherForecastUseCase @Inject constructor(
-    private val repository: OpenWeatherRepository
-) : BaseUseCase<Flow<MainDisplayState>, GeoLocation>() {
+    private val repository: OpenWeatherRepository,
+    private val filterForecast: FilterForecast,
+    private val timeAndLocaleProvider: TimeAndLocaleProvider
+) : BaseUseCase<Flow<GetDisplayWeatherForecastUseCase.Event>, GeoLocation>() {
 
-    override suspend fun build(params: GeoLocation?): Flow<MainDisplayState> {
+    sealed interface Event {
+        data class UpdateDisplayState(val displayState: MainDisplayState) : Event
+        data class SaveCurrentForecast(val forecast: List<Forecast>) : Event
+    }
+
+    override suspend fun build(params: GeoLocation?): Flow<Event> {
         requireNotNull(params)
         return flow {
-            emit(MainDisplayState.Loading)
+            emit(Event.UpdateDisplayState(MainDisplayState.Loading))
             when (val result = repository.getWeatherForecast(params.latitude, params.longitude)) {
-                is Result.Error -> emit(MainDisplayState.Error(result.errorMessage))
+                is Result.Error ->
+                    emit(Event.UpdateDisplayState(MainDisplayState.Error(result.errorMessage)))
+
                 Result.Success.Empty ->
-                    emit(MainDisplayState.Error(DefaultErrorMessage.UNKNOWN))
+                    emit(
+                        Event.UpdateDisplayState(
+                            MainDisplayState.Error(DefaultErrorMessage.UNKNOWN)
+                        )
+                    )
 
                 is Result.Success.WithData -> {
-                    emit(formatSuccessResult(result.data))
+                    proceedSuccessData(result.data)
                 }
             }
         }
     }
 
-    private fun formatSuccessResult(data: FiveDayForecast):
-            MainDisplayState.Success {
-        val nowDateTime = Instant.fromEpochMilliseconds(System.currentTimeMillis())
-            .toLocalDateTime(TimeZone.currentSystemDefault())
-        val nowHour = nowDateTime.hour
-        val nowDate = nowDateTime.date
-        val next3Date = nowDate.plus(3, DateTimeUnit.DAY)
+    private suspend fun FlowCollector<Event>.proceedSuccessData(data: FiveDayForecast) {
 
-        val groupedForecast = data.forecasts.groupBy {
-            it.dateTime.date.dayOfMonth
-        }.filter { it.key in nowDate.dayOfMonth..next3Date.dayOfMonth }
+        val filteredForeCast = filterForecast(data.forecasts)
+        emit(Event.SaveCurrentForecast(filteredForeCast))
 
-        val closestTimeForecast = groupedForecast.map {
-            it.value.closestWith(nowHour)
-        }
-
-        val todayForecast = closestTimeForecast.first()
-
-        return MainDisplayState.Success(
+        val todayForecast = filteredForeCast.last()
+        MainDisplayState.Success(
             displayedWeather = WeatherDisplayModel(
                 cityLabel = "${data.city.name}, ${data.city.country}",
                 isCityFavorite = false,
@@ -71,37 +70,23 @@ class GetDisplayWeatherForecastUseCase @Inject constructor(
                 humidity = "${todayForecast.humidity}%",
                 weatherType = todayForecast.weather.weatherType
             ),
-            forecasts = closestTimeForecast.mapIndexed { index, forecast ->
+            forecasts = filteredForeCast.mapIndexed { index, forecast ->
+                val dateTime = parseUnixDateTime(
+                    forecast.date,
+                    timeAndLocaleProvider.defaultTimezone
+                )
                 ForecastDisplayItemModel(
                     dateUnix = forecast.date.toString(),
-                    dayLabel = forecast.dateTime.dayOfWeek.name.lowercase()
-                        .replaceFirstChar { it.uppercase() },
-                    dateLabel = forecast.dateTime.toString(),
+                    dayLabel = if (index == 0) "Today" else dateTime.displayDay(),
+                    dateLabel = dateTime.displayDate(),
                     weatherIconUrl = forecast.weather.iconUrl,
                     temperature = "${forecast.temperature}°C",
                     isSelected = index == 0
                 )
             }
-        )
-    }
-
-    private fun List<Forecast>.closestWith(hour: Int): Forecast {
-        var closestItem: Forecast? = null
-        var closestDiff = 24
-        forEach {
-            val diff = abs(it.dateTime.hour - hour)
-            if (diff < closestDiff) {
-                closestDiff = diff
-                closestItem = it
-            } else {
-                return closestItem!!
-            }
+        ).let {
+            emit(Event.UpdateDisplayState(it))
         }
-        return closestItem!!
     }
-
-    private val Forecast.dateTime: LocalDateTime
-        get() = Instant.fromEpochMilliseconds(date * 1000)
-            .toLocalDateTime(TimeZone.currentSystemDefault())
 
 }

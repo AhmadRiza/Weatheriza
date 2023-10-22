@@ -15,8 +15,6 @@ import com.weatheriza.databinding.ItemWeatherBinding
 import com.weatheriza.ui.location.SearchLocationActivity
 import com.weatheriza.ui.main.state.MainDisplayState
 import com.weatheriza.ui.main.state.WeatherDisplayModel
-import com.weatheriza.ui.main.usecase.ForecastAdapter
-import com.weatheriza.ui.main.usecase.ForecastAdapterEvent
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

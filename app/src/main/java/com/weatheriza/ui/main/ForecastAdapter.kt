@@ -1,4 +1,4 @@
-package com.weatheriza.ui.main.usecase
+package com.weatheriza.ui.main
 
 import android.view.LayoutInflater
 import android.view.View.OnClickListener
