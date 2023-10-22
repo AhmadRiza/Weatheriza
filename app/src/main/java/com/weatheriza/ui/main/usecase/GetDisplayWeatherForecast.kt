@@ -3,6 +3,7 @@ package com.weatheriza.ui.main.usecase
 import com.weatheriza.core.base.BaseUseCase
 import com.weatheriza.core.model.DefaultErrorMessage
 import com.weatheriza.core.model.Result
+import com.weatheriza.data.model.FiveDayForecast
 import com.weatheriza.data.model.Forecast
 import com.weatheriza.data.model.GeoLocation
 import com.weatheriza.data.repository.OpenWeatherRepository
@@ -40,7 +41,7 @@ class GetDisplayWeatherForecast @Inject constructor(
         }
     }
 
-    private fun formatSuccessResult(data: List<Forecast>):
+    private fun formatSuccessResult(data: FiveDayForecast):
             MainDisplayState.Success {
         val nowDateTime = Instant.fromEpochMilliseconds(System.currentTimeMillis())
             .toLocalDateTime(TimeZone.currentSystemDefault())
@@ -48,7 +49,7 @@ class GetDisplayWeatherForecast @Inject constructor(
         val nowDate = nowDateTime.date
         val next3Date = nowDate.plus(3, DateTimeUnit.DAY)
 
-        val groupedForecast = data.groupBy {
+        val groupedForecast = data.forecasts.groupBy {
             it.dateTime.date.dayOfMonth
         }.filter { it.key in nowDate.dayOfMonth..next3Date.dayOfMonth }
 
@@ -60,12 +61,12 @@ class GetDisplayWeatherForecast @Inject constructor(
 
         return MainDisplayState.Success(
             displayedWeather = WeatherDisplayModel(
-                cityLabel = "${todayForecast.city.name}, ${todayForecast.city.country}",
+                cityLabel = "${data.city.name}, ${data.city.country}",
                 isCityFavorite = false,
                 weatherLabel = todayForecast.weather.label,
                 weatherIconUrl = todayForecast.weather.iconUrl,
-                temperature = todayForecast.temperature.toString(),
-                feelsLikeLabel = "Feels like ${todayForecast.feelsLike}",
+                temperature = todayForecast.temperature.toInt().toString(),
+                feelsLikeLabel = "Feels like ${todayForecast.feelsLike}°C",
                 windSpeed = "${todayForecast.windSpeed} km/h",
                 humidity = "${todayForecast.humidity}%",
                 weatherType = todayForecast.weather.weatherType
@@ -102,6 +103,5 @@ class GetDisplayWeatherForecast @Inject constructor(
     private val Forecast.dateTime: LocalDateTime
         get() = Instant.fromEpochMilliseconds(date * 1000)
             .toLocalDateTime(TimeZone.currentSystemDefault())
-
 
 }

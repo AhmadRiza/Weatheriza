@@ -90,7 +90,8 @@ dependencies {
     implementation(libs.retrofit.converter.gson)
     implementation(libs.coil)
 
-
+    debugImplementation(libs.chucker)
+    releaseImplementation(libs.chucker.noop)
 
     testImplementation(libs.junit)
     testImplementation(libs.coroutines.test)

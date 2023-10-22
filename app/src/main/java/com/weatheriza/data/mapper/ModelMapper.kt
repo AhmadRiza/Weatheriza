@@ -2,14 +2,30 @@ package com.weatheriza.data.mapper
 
 import com.weatheriza.core.network.HostUrl
 import com.weatheriza.data.model.City
+import com.weatheriza.data.model.FiveDayForecast
 import com.weatheriza.data.model.Forecast
 import com.weatheriza.data.model.GeoLocation
 import com.weatheriza.data.model.Weather
 import com.weatheriza.data.model.WeatherType
-import com.weatheriza.data.remote.entity.ForecastEntity
+import com.weatheriza.data.remote.entity.FiveDaysForecastEntity
 import com.weatheriza.data.remote.entity.GeoLocationEntity
 
-fun ForecastEntity.toForecast(): Forecast {
+fun FiveDaysForecastEntity.toFiveDayForeCast(): FiveDayForecast {
+    return FiveDayForecast(
+        forecasts = list.orEmpty().map { it.toForecast() },
+        city = City(
+            name = city?.name.orEmpty(),
+            country = city?.country.orEmpty(),
+            sunset = city?.sunset ?: 0,
+            sunrise = city?.sunrise ?: 0,
+            latitude = city?.coord?.lat ?: 0.0,
+            longitude = city?.coord?.lon ?: 0.0
+        )
+
+    )
+}
+
+fun FiveDaysForecastEntity.ForecastEntity.toForecast(): Forecast {
     return Forecast(
         date = dt ?: 0L,
         dateString = dtTxt.orEmpty(),
@@ -24,20 +40,11 @@ fun ForecastEntity.toForecast(): Forecast {
                 iconUrl = HostUrl.OPEN_WEATHER_ICON_URL.format(it?.icon.orEmpty())
             )
         },
-        windSpeed = wind?.speed ?: 0.0f,
-        city = City(
-            name = city?.name.orEmpty(),
-            country = city?.country.orEmpty(),
-            sunset = city?.sunset ?: 0,
-            sunrise = city?.sunrise ?: 0,
-            latitude = city?.coord?.lat ?: 0.0,
-            longitude = city?.coord?.lon ?: 0.0
-        )
-
+        windSpeed = wind?.speed ?: 0.0f
     )
 }
 
-fun ForecastEntity.WeatherEntity?.getWeatherType(): WeatherType {
+fun FiveDaysForecastEntity.ForecastEntity.WeatherEntity?.getWeatherType(): WeatherType {
     return when ((this?.id ?: 0) / 100) {
         2 -> WeatherType.THUNDERSTORM
         3 -> WeatherType.DRIZZLE

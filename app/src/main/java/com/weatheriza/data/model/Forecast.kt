@@ -1,5 +1,10 @@
 package com.weatheriza.data.model
 
+data class FiveDayForecast(
+    val forecasts: List<Forecast>,
+    val city: City
+)
+
 data class Forecast(
     val date: Long,
     val dateString: String,
@@ -7,8 +12,7 @@ data class Forecast(
     val feelsLike: Float,
     val humidity: Float,
     val windSpeed: Float,
-    val weather: Weather,
-    val city: City
+    val weather: Weather
 )
 
 data class Weather(

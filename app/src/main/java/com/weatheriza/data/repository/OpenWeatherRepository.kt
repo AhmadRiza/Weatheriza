@@ -1,7 +1,7 @@
 package com.weatheriza.data.repository
 
 import com.weatheriza.core.model.Result
-import com.weatheriza.data.model.Forecast
+import com.weatheriza.data.model.FiveDayForecast
 import com.weatheriza.data.model.GeoLocation
 
 interface OpenWeatherRepository {
@@ -9,6 +9,6 @@ interface OpenWeatherRepository {
     suspend fun getWeatherForecast(
         latitude: Double,
         longitude: Double
-    ): Result<List<Forecast>>
+    ): Result<FiveDayForecast>
 
 }

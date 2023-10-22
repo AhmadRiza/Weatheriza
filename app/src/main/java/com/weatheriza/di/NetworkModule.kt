@@ -1,6 +1,7 @@
 package com.weatheriza.di
 
 import android.content.Context
+import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -28,6 +29,10 @@ annotation class ApiKeyOkHttpInterceptor
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class InternetConnectionOkHttpInterceptor
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class ChuckerOkHttpInterceptor
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
@@ -64,6 +69,14 @@ object NetworkModule {
             .createInternetConnectionInterceptor()
     }
 
+    @ChuckerOkHttpInterceptor
+    @Provides
+    fun provideChuckerInterceptor(
+        @ApplicationContext context: Context
+    ): Interceptor {
+        return ChuckerInterceptor.Builder(context).build()
+    }
+
     @Provides
     fun provideGson(): Gson {
         return GsonBuilder()
@@ -75,6 +88,7 @@ object NetworkModule {
     fun provideOkHttpClient(
         @ApiKeyOkHttpInterceptor apiKeyInterceptor: Interceptor,
         @InternetConnectionOkHttpInterceptor internetConnectionInterceptor: Interceptor,
+        @ChuckerOkHttpInterceptor chuckerOkHttpInterceptor: Interceptor,
     ): OkHttpClient {
         return OkHttpClient.Builder().apply {
             this.addInterceptor(apiKeyInterceptor)
@@ -82,6 +96,7 @@ object NetworkModule {
                 .connectTimeout(15, TimeUnit.SECONDS)
                 .readTimeout(15, TimeUnit.SECONDS)
                 .writeTimeout(15, TimeUnit.SECONDS)
+                .addInterceptor(chuckerOkHttpInterceptor)
         }.build()
     }
 
