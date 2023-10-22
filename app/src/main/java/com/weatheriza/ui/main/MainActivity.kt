@@ -1,5 +1,6 @@
 package com.weatheriza.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
@@ -11,6 +12,7 @@ import com.weatheriza.core.base.BaseVMActivity
 import com.weatheriza.data.model.GeoLocation
 import com.weatheriza.databinding.ActivityMainBinding
 import com.weatheriza.databinding.ItemWeatherBinding
+import com.weatheriza.ui.location.SearchLocationActivity
 import com.weatheriza.ui.main.state.MainDisplayState
 import com.weatheriza.ui.main.state.WeatherDisplayModel
 import com.weatheriza.ui.main.usecase.ForecastAdapter
@@ -34,6 +36,7 @@ class MainActivity :
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setupView()
         setupForecastList()
         window.statusBarColor = ContextCompat.getColor(this, R.color.md_blue_200)
 
@@ -47,6 +50,14 @@ class MainActivity :
                 )
             )
         )
+    }
+
+    private fun setupView() {
+        binding.layoutWeather.run {
+            buttonSearch.setOnClickListener {
+                startActivity(Intent(this@MainActivity, SearchLocationActivity::class.java))
+            }
+        }
     }
 
     override fun renderEffect(effect: MainViewModel.Effect) {
