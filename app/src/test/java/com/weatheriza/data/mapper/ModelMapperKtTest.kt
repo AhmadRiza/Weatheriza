@@ -1,11 +1,15 @@
 package com.weatheriza.data.mapper
 
 import com.weatheriza.data.model.City
+import com.weatheriza.data.model.FiveDayForecast
 import com.weatheriza.data.model.Forecast
 import com.weatheriza.data.model.GeoLocation
 import com.weatheriza.data.model.Weather
 import com.weatheriza.data.model.WeatherType
-import com.weatheriza.data.remote.entity.ForecastEntity
+import com.weatheriza.data.remote.entity.FiveDaysForecastEntity
+import com.weatheriza.data.remote.entity.FiveDaysForecastEntity.CityEntity
+import com.weatheriza.data.remote.entity.FiveDaysForecastEntity.ForecastEntity
+import com.weatheriza.data.remote.entity.FiveDaysForecastEntity.ForecastEntity.WeatherEntity
 import com.weatheriza.data.remote.entity.GeoLocationEntity
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
@@ -15,7 +19,7 @@ class ModelMapperKtTest : ShouldSpec() {
     init {
 
         context("map weather entity weather type") {
-            val mockWeatherEntity = ForecastEntity.WeatherEntity(
+            val mockWeatherEntity = WeatherEntity(
                 id = 100, main = "Cloudy", description = "", icon = "10d"
             )
             should("should return correct type") {
@@ -40,24 +44,29 @@ class ModelMapperKtTest : ShouldSpec() {
                     tempMax = 40f,
                     humidity = 3f
                 ),
-                weather = ForecastEntity.WeatherEntity(
-                    id = 200,
-                    main = "Cloud",
-                    description = "yes",
-                    icon = "10d"
+                weather = listOf(
+                    WeatherEntity(
+                        id = 200,
+                        main = "Cloud",
+                        description = "yes",
+                        icon = "10d"
+                    )
                 ),
                 wind = ForecastEntity.WindEntity(speed = 10f, degree = 2f),
-                city = ForecastEntity.CityEntity(
+                dtTxt = "date"
+            )
+            val mockFiveDayForecast = FiveDaysForecastEntity(
+                list = listOf(mockForecastEntity), city = CityEntity(
                     name = "Jakarta",
                     country = "ID",
                     sunrise = 111,
                     sunset = 222,
-                    coord = ForecastEntity.CityEntity.CoordinateEntity(1.0, 2.0)
+                    coord = CityEntity.CoordinateEntity(1.0, 2.0)
                 )
-
             )
             should("should return correct model") {
-                mockForecastEntity.toForecast() shouldBe
+                mockFiveDayForecast.toFiveDayForeCast() shouldBe FiveDayForecast(
+                    forecasts = listOf(
                         Forecast(
                             date = 1234,
                             temperature = 35.5f,
@@ -70,15 +79,21 @@ class ModelMapperKtTest : ShouldSpec() {
                                 description = "yes",
                                 iconUrl = "https://openweathermap.org/img/wn/10d@4x.png"
                             ),
-                            city = City(
-                                name = "Jakarta",
-                                country = "ID",
-                                sunrise = 111,
-                                sunset = 222,
-                                latitude = 1.0,
-                                longitude = 2.0
-                            )
+                            dateString = "date",
                         )
+                    ),
+                    city = City(
+                        name = "Jakarta",
+                        country = "ID",
+                        sunrise = 111,
+                        sunset = 222,
+                        latitude = 1.0,
+                        longitude = 2.0
+                    )
+
+                )
+
+
             }
         }
 
