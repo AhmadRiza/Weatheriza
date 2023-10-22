@@ -1,5 +1,7 @@
 package com.weatheriza.ui.location
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
@@ -7,11 +9,17 @@ import androidx.core.widget.doAfterTextChanged
 import com.weatheriza.core.base.BaseVMActivity
 import com.weatheriza.databinding.ActivitySearchBinding
 import com.weatheriza.ui.location.state.SearchDisplayState
+import com.weatheriza.ui.main.MainActivity.Companion.EXTRA_KEY_GEOLOCATION
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SearchLocationActivity : BaseVMActivity<SearchLocationViewModel.Intent,
         SearchLocationViewModel.State, SearchLocationViewModel.Effect, SearchLocationViewModel>() {
+
+    companion object {
+        fun createIntent(context: Context) = Intent(context, SearchLocationActivity::class.java)
+
+    }
 
     override val viewModel: SearchLocationViewModel by viewModels()
 
@@ -67,7 +75,15 @@ class SearchLocationActivity : BaseVMActivity<SearchLocationViewModel.Intent,
 
     private fun initGeoLocationAdapter(): GeoLocationAdapter {
         return GeoLocationAdapter {
-
+            when (it) {
+                is GeoLocationAdapterEvent.OnGeoLocationItemClicked -> {
+                    setResult(
+                        RESULT_OK,
+                        Intent().apply { putExtra(EXTRA_KEY_GEOLOCATION, it.geoLocation) }
+                    )
+                    finish()
+                }
+            }
         }
     }
 }

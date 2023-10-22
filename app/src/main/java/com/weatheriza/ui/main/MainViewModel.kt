@@ -28,7 +28,9 @@ class MainViewModel @Inject constructor(
     )
 
     sealed interface Intent {
-        data class OnViewCreated(val location: GeoLocation) : Intent
+
+        data object OnViewCreated : Intent
+        data class OnGeoLocationReceived(val location: GeoLocation) : Intent
         data class OnForecastClick(val forecastModel: ForecastDisplayItemModel) : Intent
     }
 
@@ -39,14 +41,27 @@ class MainViewModel @Inject constructor(
 
     override fun onIntentReceived(intent: Intent) {
         when (intent) {
-            is Intent.OnViewCreated -> onViewCreated(intent.location)
+            is Intent.OnGeoLocationReceived -> loadWeather(intent.location)
             is Intent.OnForecastClick -> {
                 onOnForecastClick(intent.forecastModel)
             }
+
+            Intent.OnViewCreated -> onViewCreated()
         }
     }
 
-    private fun onViewCreated(geoLocation: GeoLocation) {
+    private fun onViewCreated() {
+        loadWeather(
+            GeoLocation(
+                name = "Jak",
+                countryCode = "Id",
+                latitude = -7.6290837,
+                longitude = 111.5168819
+            )
+        )
+    }
+
+    private fun loadWeather(geoLocation: GeoLocation) {
         viewModelScope.launch {
             getDisplayWeatherForecast(geoLocation)
                 .flowOn(Dispatchers.IO)
@@ -97,8 +112,6 @@ class MainViewModel @Inject constructor(
                         )
                     }
                 }
-
-
             }
         }
     }

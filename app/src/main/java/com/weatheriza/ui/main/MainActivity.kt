@@ -1,7 +1,7 @@
 package com.weatheriza.ui.main
 
-import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.view.isInvisible
@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import coil.load
 import com.weatheriza.R
 import com.weatheriza.core.base.BaseVMActivity
+import com.weatheriza.core.utils.parcelable
 import com.weatheriza.data.model.GeoLocation
 import com.weatheriza.databinding.ActivityMainBinding
 import com.weatheriza.databinding.ItemWeatherBinding
@@ -24,10 +25,24 @@ class MainActivity :
             MainViewModel.Effect,
             MainViewModel>() {
 
+    companion object {
+        const val EXTRA_KEY_GEOLOCATION = "EXTRA_KEY_GEOLOCATION"
+    }
+
     override val viewModel: MainViewModel by viewModels()
 
     private lateinit var binding: ActivityMainBinding
     private val forecastAdapter = initForecastAdapter()
+
+    private val searchActivityLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            result.data?.parcelable<GeoLocation>(EXTRA_KEY_GEOLOCATION)?.let {
+                dispatch(MainViewModel.Intent.OnGeoLocationReceived(it))
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,22 +53,15 @@ class MainActivity :
         setupForecastList()
         window.statusBarColor = ContextCompat.getColor(this, R.color.md_blue_200)
 
-        dispatch(
-            MainViewModel.Intent.OnViewCreated(
-                location = GeoLocation(
-                    name = "Jak",
-                    countryCode = "Id",
-                    latitude = -7.6290837,
-                    longitude = 111.5168819
-                )
-            )
-        )
+        dispatch(MainViewModel.Intent.OnViewCreated)
     }
 
     private fun setupView() {
         binding.layoutWeather.run {
             buttonSearch.setOnClickListener {
-                startActivity(Intent(this@MainActivity, SearchLocationActivity::class.java))
+                searchActivityLauncher.launch(
+                    SearchLocationActivity.createIntent(this@MainActivity)
+                )
             }
         }
     }
