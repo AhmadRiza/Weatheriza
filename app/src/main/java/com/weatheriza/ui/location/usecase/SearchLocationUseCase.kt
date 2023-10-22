@@ -32,7 +32,9 @@ class SearchLocationUseCase @Inject constructor(
                 }
 
                 is Result.Success.WithData -> SearchDisplayState.DisplayLocationList(
-                    result.data.map { GeoLocationItemModel.GeoLocationItem(it, false) }
+                    result.data.map {
+                        GeoLocationItemModel.GeoLocationItem(it, repository.isCityFavorite(it.name))
+                    }
                 ).let { state -> emit(state) }
             }
         }

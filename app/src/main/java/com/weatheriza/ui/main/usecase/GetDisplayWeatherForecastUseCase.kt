@@ -48,7 +48,7 @@ class GetDisplayWeatherForecastUseCase @Inject constructor(
                     val todayForecast = filteredForeCast.first()
                     MainDisplayState.Success(
                         cityLabel = "${result.data.city.name}, ${result.data.city.country}",
-                        isCityFavorite = repository.isFavorite(params.name),
+                        isCityFavorite = repository.isCityFavorite(params.name),
                         displayedWeather = getWeatherDisplay(todayForecast),
                         forecasts = filteredForeCast.toForecastDisplayItemModels()
                     ).let {

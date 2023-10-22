@@ -50,7 +50,7 @@ class OpenWeatherRepositoryImpl @Inject constructor(
         return localDataSource.getAllFavoriteCity()
     }
 
-    override suspend fun isFavorite(name: String): Boolean {
+    override suspend fun isCityFavorite(name: String): Boolean {
         return localDataSource.isFavorite(name)
     }
 
