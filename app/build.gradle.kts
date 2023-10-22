@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     alias(libs.plugins.com.android.application)
@@ -23,8 +25,8 @@ android {
 
     buildTypes {
         all {
-            val openWeatherApiKey: String by project
-            buildConfigField("String", "OPEN_WEATHER_API_KEY", openWeatherApiKey)
+            val apiKey: String = gradleLocalProperties(rootDir).getProperty("openWeatherApiKey")
+            buildConfigField("String", "OPEN_WEATHER_API_KEY", apiKey)
         }
         release {
             isMinifyEnabled = false
